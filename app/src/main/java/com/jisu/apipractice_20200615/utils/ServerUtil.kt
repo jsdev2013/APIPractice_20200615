@@ -3,6 +3,7 @@ package com.jisu.apipractice_20200615.utils
 import android.content.Context
 import android.util.Log
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONObject
 import java.io.IOException
 
@@ -15,6 +16,51 @@ class ServerUtil {
         //        호스트가 어디인지 명시 => 가져다 사용
         val BASE_URL = "http://15.165.177.142"
 
+        //        중복체크를 get으로 요청하는 함수
+        fun getRequestDuplicatedCheck(context: Context, type: String, input: String, handler: JsonResponseHandler?){
+            val client = OkHttpClient()
+
+//            어느 기능주소로 + GET 방식은 => 주소에, 파라미터를 모두 적어줘야 함
+//            가공된 주소를 가지고 newBuilder로 파라미터를 청구할 준비를 함
+            val urlBuilder = "${BASE_URL}/user_check".toHttpUrlOrNull()!!.newBuilder()
+
+//            실제로 파라미터를 주소에 첨부
+            urlBuilder.addEncodedQueryParameter("type", type)
+            urlBuilder.addEncodedQueryParameter("value", input)
+
+//            완성된 주소를 String으로 변경
+            val urlString = urlBuilder.build().toString()
+
+//            실제 요청정보를  request 저장
+            val request = Request.Builder()
+                .url(urlString)
+                .get()
+//                .header() //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+//                    연결 자체에 실패한 경우
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+//                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+//                    서버의 응답중 본문을 String으로 저장
+                    val bodyString = response.body!!.string()
+
+//                    본문 String을 => JSON형태로 변환 => 변수에 저장
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+
+//                    JSON 파싱은 화면에서 진행하도록 처리(인터페이스 역할)
+                    handler?.onResponse(json)
+                }
+
+            })
+        }
+        
+        
         //        로그인 기능을 post로 요청하는 함수
         fun postRequestLogin(context:Context, email:String, pw:String, handler: JsonResponseHandler?) {
 

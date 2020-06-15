@@ -22,6 +22,7 @@ class LoginActivity : BaseActivity() {
             val email = emailEdt.text.toString()
             val pw = passwordEdt.text.toString()
 
+            // kj_cho@nepp.kr
             ServerUtil.postRequestLogin(mContext, email, pw, object :ServerUtil.JsonResponseHandler{
                 override fun onResponse(json: JSONObject) {
                     // 서버의 응답을 처리하는 코드들

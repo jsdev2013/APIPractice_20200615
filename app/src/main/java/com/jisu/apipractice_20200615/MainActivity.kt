@@ -2,6 +2,7 @@ package com.jisu.apipractice_20200615
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.jisu.apipractice_20200615.datas.Topic
 import com.jisu.apipractice_20200615.datas.User
 import com.jisu.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,7 +46,9 @@ class MainActivity : BaseActivity() {
 
                 for (i in 0..topics.length()-1) {
                     val topicJson = topics.getJSONObject(i)
-
+                
+                    // 주제 하나에 대응되는 JSON을 넣어서 Topic 객체로 알아내자
+                    val topic = Topic.getTopicFromJson(topicJson)
                 }
 
             }

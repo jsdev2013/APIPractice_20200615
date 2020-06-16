@@ -41,6 +41,31 @@ class SignUpActivity : BaseActivity() {
 
             })
         }
+
+        nickNameCheckBtn.setOnClickListener {
+            val nickName = nickNameEdt.text.toString()
+
+            // 서버에 중복확인 요청
+            ServerUtil.getRequestDuplicatedCheck(mContext, "NICK_NAME", nickName, object: ServerUtil.JsonResponseHandler{
+                override fun onResponse(json: JSONObject) {
+                    // 서버의 응답을 처리하는 코드들
+                    // 제일 큰 껍데기 json 변수에서 추출
+                    val code = json.getInt("code")
+                    val message = json.getString("message")
+
+                    runOnUiThread {
+                        nickNameCheckResultTxt.text = message
+//                        if (code == 200) {
+//                            nickNameCheckResultTxt.text = message
+//
+//                        } else {
+//                            nickNameCheckResultTxt.text = message
+//                        }
+                    }
+                }
+
+            })
+        }
     }
 
     override fun setValues() {

@@ -76,4 +76,25 @@
         android:layout_height="wrap_content"
         android:text="닉네임 중복검사를 해주세요."/>
 
+    <TextView
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비밀번호"/>
+
+    <EditText
+        android:id="@+id/passwordEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="8글자 이상으로 해주세요"
+        android:textSize="15dp"/>
+
+    <Button
+        android:id="@+id/signUpBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입"/>
+
+
 </LinearLayout>

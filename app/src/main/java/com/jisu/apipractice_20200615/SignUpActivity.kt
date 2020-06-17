@@ -2,6 +2,9 @@ package com.jisu.apipractice_20200615
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.widget.Toast
 import com.jisu.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -22,6 +25,37 @@ class SignUpActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        // 이메일 입력값이 변경되면 => 무조건 다시 검사를 받으라고 문구 / Boolean 변경
+        emailEdt.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            // 문구가 바꿨을때
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //Log.d("바뀐 이메일", s.toString())
+                emailCheckResultTxt.text = "이메일 중복검사를 해주세요."
+                // 이메일 중복검사를 다시 해야하므로 사용 불가 처리
+                isEmailOk = false
+            }
+        })
+        // 닉네임 입력값이 변경되면 => 무조건 다시 검사를 받으라고 문구 / Boolean 변경
+        nickNameEdt.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            // 문구가 바꿨을때
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //Log.d("바뀐 이메일", s.toString())
+                nickNameCheckResultTxt.text = "닉네임 중복검사를 해주세요."
+                // 이메일 중복검사를 다시 해야하므로 사용 불가 처리
+                isNickNameOk = false
+            }
+        })
+
+
 
         signUpBtn.setOnClickListener {
 

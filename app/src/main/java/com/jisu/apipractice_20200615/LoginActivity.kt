@@ -3,6 +3,7 @@ package com.jisu.apipractice_20200615
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.jisu.apipractice_20200615.utils.ContextUtil
 import com.jisu.apipractice_20200615.utils.ServerUtil
@@ -19,6 +20,15 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        // 자동로그인 체크박스의 값 변화 이벤트
+        autoLoginCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            Log.d("체크박스 값", isChecked.toString())
+            
+            // 체크가 됐다면 => ContextUtil 자동 로그인 true로 저장
+            // 체크가 해제되었다면 => ContextUtil로 자동 로그인 false로 저장
+            ContextUtil.setAutoLogin(mContext, isChecked)
+        }
 
         loginBtn.setOnClickListener {
             val email = emailEdt.text.toString()

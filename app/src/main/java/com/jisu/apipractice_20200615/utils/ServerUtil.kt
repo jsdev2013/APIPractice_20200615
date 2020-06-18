@@ -266,6 +266,36 @@ class ServerUtil {
 
             })
         }
+
+        //        진영 선택 투표를 post로 하는 함수
+        fun postRequestTopicVote(context:Context, sideId:Int, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/topic_vote"
+
+            val formData = FormBody.Builder()
+                .add("side_id", sideId.toString())
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
+            })
+        }
     }
 
     //    서버 통신의 응답 내용을 Activity에 전달해주는 인터페이스

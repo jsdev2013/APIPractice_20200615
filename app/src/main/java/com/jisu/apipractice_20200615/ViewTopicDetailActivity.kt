@@ -26,6 +26,13 @@ class ViewTopicDetailActivity : BaseActivity() {
 
     override fun setupEvents() {
 
+        voteToFirstSideBtn.setOnClickListener {
+            voteSideToServer(mTopic.sideList[0].id)
+        }
+
+        voteToSecondSideBtn.setOnClickListener {
+            voteSideToServer(mTopic.sideList[1].id)
+        }
     }
 
     override fun setValues() {
@@ -59,6 +66,23 @@ class ViewTopicDetailActivity : BaseActivity() {
                     secondSideTxt.text = mTopic.sideList[1].title
                     firstSideVoteCntTxt.text = "${mTopic.sideList[0].voteCount}표"
                     secondSideVoteCntTxt.text = "${mTopic.sideList[1].voteCount}표"
+                }
+            }
+        })
+    }
+
+    fun voteSideToServer(sideId:Int) {
+        ServerUtil.postRequestTopicVote(mContext,  sideId, object:ServerUtil.JsonResponseHandler{
+            override fun onResponse(json: JSONObject) {
+                val code = json.getInt("code")
+
+                runOnUiThread {
+                    if (code == 200) {
+                        Toast.makeText(mContext, "투표가 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                        getTopicDetailFromServer()
+                    } else {
+                        Toast.makeText(mContext, "이미 의견을 등록해, 투표를 변경할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         })

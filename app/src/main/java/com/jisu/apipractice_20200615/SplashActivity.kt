@@ -24,7 +24,9 @@ class SplashActivity : BaseActivity() {
 
         Handler().postDelayed({
 
+            // 자동로그인 희망여부
             val isAutoLogin = ContextUtil.isAutoLogin(mContext)
+            // 저장된 토큰값
             val token = ContextUtil.getUserToken(mContext)
 
             // 자동로그인 && 토큰도 저장되어 있다면

@@ -57,6 +57,8 @@ class ViewTopicDetailActivity : BaseActivity() {
 
                     firstSideTxt.text = mTopic.sideList[0].title
                     secondSideTxt.text = mTopic.sideList[1].title
+                    firstSideVoteCntTxt.text = "${mTopic.sideList[0].voteCount}표"
+                    secondSideVoteCntTxt.text = "${mTopic.sideList[1].voteCount}표"
                 }
             }
         })

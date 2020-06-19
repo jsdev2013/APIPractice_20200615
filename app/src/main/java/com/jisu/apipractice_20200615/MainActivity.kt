@@ -2,12 +2,10 @@ package com.jisu.apipractice_20200615
 
 import android.content.DialogInterface
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.jisu.apipractice_20200615.adapters.TopicAdapter
 import com.jisu.apipractice_20200615.datas.Topic
-import com.jisu.apipractice_20200615.datas.User
 import com.jisu.apipractice_20200615.utils.ContextUtil
 import com.jisu.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_main.*

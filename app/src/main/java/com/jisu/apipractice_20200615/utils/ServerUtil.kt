@@ -234,7 +234,7 @@ class ServerUtil {
             val client = OkHttpClient()
 
             val urlBuilder = "${BASE_URL}/topic/${topicId}".toHttpUrlOrNull()!!.newBuilder()
-            urlBuilder.addEncodedQueryParameter("order_type", "POPULAR")
+            urlBuilder.addEncodedQueryParameter("order_type", "NEW")
 
 //            완성된 주소를 String으로 변경
             val urlString = urlBuilder.build().toString()
@@ -276,6 +276,68 @@ class ServerUtil {
 
             val formData = FormBody.Builder()
                 .add("side_id", sideId.toString())
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
+            })
+        }
+
+        //       댓글 등록하기를 post로 하는 함수
+        fun postRequestTopicReplay(context:Context, topicId:Int, content:String, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/topic_reply"
+
+            val formData = FormBody.Builder()
+                .add("topic_id", topicId.toString())
+                .add("content", content)
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
+            })
+        }
+
+        //        의견/답글에 대한 좋아요, 싫어요 기능을 post 로 요청하는 함수
+        fun postRequestTopicReplyLike(context:Context, replyId:Int, isLike:Boolean, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/topic_reply_like"
+
+            val formData = FormBody.Builder()
+                .add("reply_id", replyId.toString())
+                .add("is_like", isLike.toString())
                 .build()
 
             val request = Request.Builder()

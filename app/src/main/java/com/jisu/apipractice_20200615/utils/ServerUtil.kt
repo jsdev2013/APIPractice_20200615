@@ -234,6 +234,7 @@ class ServerUtil {
             val client = OkHttpClient()
 
             val urlBuilder = "${BASE_URL}/topic/${topicId}".toHttpUrlOrNull()!!.newBuilder()
+            urlBuilder.addEncodedQueryParameter("order_type", "POPULAR")
 
 //            완성된 주소를 String으로 변경
             val urlString = urlBuilder.build().toString()

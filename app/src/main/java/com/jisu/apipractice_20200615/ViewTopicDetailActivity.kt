@@ -42,8 +42,19 @@ class ViewTopicDetailActivity : BaseActivity() {
         }
 
         postReplyBtn.setOnClickListener {
-            var myIntent = Intent(mContext, EditReplyActivity::class.java)
-            startActivity(myIntent)
+            
+            // 선택진영이 있을 때만(투표를 했어야만) 의견 작성 화면 이동
+            mTopic.mySideInfo?.let {
+                var myIntent = Intent(mContext, EditReplyActivity::class.java)
+                myIntent.putExtra("topicTitle", mTopic.title)
+                myIntent.putExtra("sideTitle", it.title)
+                startActivity(myIntent)
+            }.let {
+                // null이 맞을 때(투표 안했을 때)
+                if(it == null) {
+                    Toast.makeText(mContext, "투표를 해야만 의견 작성이 가능합니다.",Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

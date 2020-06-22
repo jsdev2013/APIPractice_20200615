@@ -12,6 +12,10 @@ class TopicReply {
     var sideId = 0
     var userId = 0
 
+    var likeCtn = 0
+    var dislikeCtn = 0
+    var replyCnt = 0
+
     lateinit var writer: User
 
     // 속성일시를 시간 형태로 저장 변수 => 기본값: 현재일시
@@ -26,6 +30,9 @@ class TopicReply {
             tr.topicId = json.getInt("topic_id")
             tr.sideId = json.getInt("side_id")
             tr.userId = json.getInt("user_id")
+            tr.likeCtn = json.getInt("like_count")
+            tr.dislikeCtn = json.getInt("dislike_count")
+            tr.replyCnt = json.getInt("reply_count")
 
             val userObject = json.getJSONObject("user")
             tr.writer = User.getUserFromJson(userObject)

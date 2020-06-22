@@ -15,6 +15,9 @@ class Topic {
     // 내가 선택한 진영이 첫번째인지, 두번째인지, 아니면 선택을 안했는지 기록하는 변수
     var mySelectedSideIndex = -1 // 선택안됨: -1, 그 외숫자: 발견된 위치(index)
 
+    // 내가 선택한 진영 정보 => 투표를 안했으면 null 이어야 함
+    var mySideInfo : TopicSide? = null
+
     companion object {
         fun getTopicFromJson(json:JSONObject):Topic {
             val topic = Topic()
@@ -56,6 +59,13 @@ class Topic {
                 // JSONArray의 i번째 추출
                 topic.replyList.add(TopicReply.getTopicReplyFromJson(replies.getJSONObject((i))))
             }
+
+            // 내 선택 진영 파싱 => 투표를 안했으면 null 임
+            // null이 아닐 경우만 파싱
+            if (!json.isNull("my_side")) {
+                topic.mySideInfo = TopicSide.getTopicSideFromJson(json.getJSONObject("my_side"))
+            }
+
 
             return topic
         }

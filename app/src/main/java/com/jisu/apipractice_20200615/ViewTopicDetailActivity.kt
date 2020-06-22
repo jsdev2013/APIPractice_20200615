@@ -1,5 +1,6 @@
 package com.jisu.apipractice_20200615
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -38,6 +39,11 @@ class ViewTopicDetailActivity : BaseActivity() {
 
         voteToSecondSideBtn.setOnClickListener {
             voteSideToServer(mTopic.sideList[1].id)
+        }
+
+        postReplyBtn.setOnClickListener {
+            var myIntent = Intent(mContext, EditReplyActivity::class.java)
+            startActivity(myIntent)
         }
     }
 

@@ -17,6 +17,9 @@ class TopicReply {
     var replyCnt = 0
 
     lateinit var writer: User
+    
+    // 의견이 어떤 진영을 옹호하는지
+    lateinit var selectedSide: TopicSide
 
     // 속성일시를 시간 형태로 저장 변수 => 기본값: 현재일시
     val createdAt = Calendar.getInstance()
@@ -33,6 +36,9 @@ class TopicReply {
             tr.likeCtn = json.getInt("like_count")
             tr.dislikeCtn = json.getInt("dislike_count")
             tr.replyCnt = json.getInt("reply_count")
+
+            // 선택진영 정보 파싱 => selected_side JSON => topicSide 전화
+            tr.selectedSide = TopicSide.getTopicSideFromJson(json.getJSONObject("selected_side"))
 
             val userObject = json.getJSONObject("user")
             tr.writer = User.getUserFromJson(userObject)

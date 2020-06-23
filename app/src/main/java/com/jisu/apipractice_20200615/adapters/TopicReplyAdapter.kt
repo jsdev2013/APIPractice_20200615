@@ -57,6 +57,31 @@ class TopicReplyAdapter(
         replyBtn.text = "답글 : ${data.replyCount.toString()}개"
         likeBtn.text = "좋아요 : ${data.likeCount.toString()}개"
         dislikeBtn.text = "싫어요 : ${data.dislikeCount.toString()}개"
+        
+        // 내 좋아요 여부 / 싫어요 여부 표시
+        // 내 좋아요 : 좋아요 빨강 / 싫어요 회색
+        // 내 싫어요 : 좋아요 회색 / 싫어요 파랑
+        // 그 외 (둘다 안 찍은 경우) 좋아요 회색 / 싫어요 회색
+        // 글씨 색도 같은 색으로 설정
+        if (data.isMyLike) {
+            likeBtn.setBackgroundResource(R.drawable.red_border_box)
+            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
+
+            likeBtn.setTextColor(mContext.resources.getColor(R.color.red))
+            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.deepGray))
+        } else if (data.isMyDislike) {
+            likeBtn.setBackgroundResource(R.drawable.gray_border_box)
+            dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
+
+            likeBtn.setTextColor(mContext.resources.getColor(R.color.deepGray))
+            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.indigo))
+        } else {
+            likeBtn.setBackgroundResource(R.drawable.gray_border_box)
+            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
+
+            likeBtn.setTextColor(mContext.resources.getColor(R.color.deepGray))
+            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.deepGray))
+        }
 
         // 좋아요, 싫어요 클릭 이벤트
         val likeOrDislikeEvent = View.OnClickListener {
@@ -73,6 +98,10 @@ class TopicReplyAdapter(
                     // data변수 내부 값중 좋아요 /싫어요 갯수 변경
                     data.likeCount = reply.getInt("like_count")
                     data.dislikeCount = reply.getInt("dislike_count")
+
+                    // data 내부 값중 좋아요/싫어요 실시간 반영 처리
+                    data.isMyLike = reply.getBoolean("my_like")
+                    data.isMyDislike = reply.getBoolean("my_dislike")
 
                     // 리스트뷰에 뿌려지는 데이터에 내용 변경 => notifyDataSetChanged 필요
                     // 어댑터변수.notify~ 실행. 어댑터변수 X.

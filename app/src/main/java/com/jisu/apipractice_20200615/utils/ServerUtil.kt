@@ -361,6 +361,75 @@ class ServerUtil {
                 }
             })
         }
+
+        //        특정 댓글의 상세 진행상황 정보를  get으로 요청하는 함수
+        fun getRequestReplyDetail(context: Context, replyId:Int, handler: JsonResponseHandler?){
+            val client = OkHttpClient()
+
+            val urlBuilder = "${BASE_URL}/topic_reply/${replyId}".toHttpUrlOrNull()!!.newBuilder()
+
+//            완성된 주소를 String으로 변경
+            val urlString = urlBuilder.build().toString()
+
+//            실제 요청정보를  request 저장
+            val request = Request.Builder()
+                .url(urlString)
+                .get()
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+//                    연결 자체에 실패한 경우
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+//                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+//                    서버의 응답중 본문을 String으로 저장
+                    val bodyString = response.body!!.string()
+
+//                    본문 String을 => JSON형태로 변환 => 변수에 저장
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+
+//                    JSON 파싱은 화면에서 진행하도록 처리(인터페이스 역할)
+                    handler?.onResponse(json)
+                }
+
+            })
+        }
+
+        //       대댓글 등록하기를 post로 하는 함수
+        fun postRequestReReplay(context:Context, parentReplyId:Int, content:String, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/topic_reply"
+
+            val formData = FormBody.Builder()
+                .add("parent_reply_id", parentReplyId.toString())
+                .add("content", content)
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
+            })
+        }
     }
 
     //    서버 통신의 응답 내용을 Activity에 전달해주는 인터페이스

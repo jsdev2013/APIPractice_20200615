@@ -69,7 +69,6 @@ class ViewTopicDetailActivity : BaseActivity() {
 
         // 제대로 id값을 받아온 경우 => 서버에 해당 토픽 진행상황 조회
         getTopicDetailFromServer()
-
     }
 
     // 진행상황을 받아와주는 함수 (별도 기능)

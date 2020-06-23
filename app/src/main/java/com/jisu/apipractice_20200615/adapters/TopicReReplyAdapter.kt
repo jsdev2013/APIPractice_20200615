@@ -17,7 +17,7 @@ import com.jisu.apipractice_20200615.utils.ServerUtil
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 
-class TopicReplyAdapter(
+class TopicReReplyAdapter(
     val mContext:Context,
     val resId:Int,
     val mList:List<TopicReply>) : ArrayAdapter<TopicReply>(mContext, resId, mList) {
@@ -29,7 +29,7 @@ class TopicReplyAdapter(
         tempRow?.let {
 
         }.let {
-            tempRow = inf.inflate(R.layout.topic_reply_list_item, null)
+            tempRow = inf.inflate(R.layout.topic_rereply_list_item, null)
         }
 
 //        row가 절대 null 아님을 보장하면서 대입
@@ -37,8 +37,6 @@ class TopicReplyAdapter(
 
         val replyNickNameTxt = row.findViewById<TextView>(R.id.replyNickNameTxt)
         val replyContentTxt = row.findViewById<TextView>(R.id.replyContentTxt)
-        val replyTimeTxt = row.findViewById<TextView>(R.id.replyTimeTxt)
-        val replyBtn = row.findViewById<Button>(R.id.replyBtn)
         val likeBtn = row.findViewById<Button>(R.id.likeBtn)
         val dislikeBtn = row.findViewById<Button>(R.id.dislikeBtn)
         val selectedSideTitleTxt = row.findViewById<TextView>(R.id.selectedSideTitleTxt)
@@ -51,12 +49,7 @@ class TopicReplyAdapter(
         //  선택 진영 정보 반영
         selectedSideTitleTxt.text = "(${data.selectedSide.title})"
 
-        val sdf = SimpleDateFormat("M월 d일 a h시 m분")
-
-        replyTimeTxt.text = sdf.format(data.createdAt.time)
-
         // 좋아요 / 싫어요 / 답글 갯수 표시
-        replyBtn.text = "답글 : ${data.replyCount.toString()}개"
         likeBtn.text = "좋아요 : ${data.likeCount.toString()}개"
         dislikeBtn.text = "싫어요 : ${data.dislikeCount.toString()}개"
         
@@ -118,13 +111,6 @@ class TopicReplyAdapter(
 
         likeBtn.setOnClickListener(likeOrDislikeEvent)
         dislikeBtn.setOnClickListener(likeOrDislikeEvent)
-
-        // 답글 누르면 의견 상세 조회 화면으로 이동
-        replyBtn.setOnClickListener {
-            val myIntent = Intent(mContext, ViewReplyDetailActivity::class.java)
-            myIntent.putExtra("replyId", data.id)
-            mContext.startActivity(myIntent)
-        }
         
 //        완성된 row를 리스트뷰의 재료로 리턴
         return row

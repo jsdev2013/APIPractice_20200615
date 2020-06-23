@@ -46,7 +46,7 @@ class ViewTopicDetailActivity : BaseActivity() {
             // 선택진영이 있을 때만(투표를 했어야만) 의견 작성 화면 이동
             mTopic.mySideInfo?.let {
                 var myIntent = Intent(mContext, EditReplyActivity::class.java)
-                myIntent.putExtra("topicId", mTopic.id)
+                myIntent.putExtra("topicId", mTopicId) // 질문: topic_id: 2? side_id: 5?
                 myIntent.putExtra("topicTitle", mTopic.title)
                 myIntent.putExtra("mySideTitle", it.title)
                 startActivity(myIntent)
@@ -128,5 +128,12 @@ class ViewTopicDetailActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 화면이 다시 나타날때 마다 => 서버에서 주제 최신으로 갱신.
+        // 제대로 id값을 받아온 경우 => 서버에 해당 토픽 진행상황 조회
+        getTopicDetailFromServer()
     }
 }

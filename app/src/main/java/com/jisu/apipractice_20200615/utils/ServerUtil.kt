@@ -304,6 +304,8 @@ class ServerUtil {
             val client = OkHttpClient()
             val urlString = "${BASE_URL}/topic_reply"
 
+            Log.d("formData topicId 내용", topicId.toString()) // test: topicId 내용: 4
+
             val formData = FormBody.Builder()
                 .add("topic_id", topicId.toString())
                 .add("content", content)
@@ -330,7 +332,7 @@ class ServerUtil {
         }
 
         //        의견/답글에 대한 좋아요, 싫어요 기능을 post 로 요청하는 함수
-        fun postRequestTopicReplyLike(context:Context, replyId:Int, isLike:Boolean, handler: JsonResponseHandler?) {
+        fun postRequestReplyLikeOrDislike(context:Context, replyId:Int, isLike:Boolean, handler: JsonResponseHandler?) {
 
             val client = OkHttpClient()
             val urlString = "${BASE_URL}/topic_reply_like"

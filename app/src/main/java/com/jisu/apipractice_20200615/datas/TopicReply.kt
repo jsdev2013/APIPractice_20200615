@@ -12,14 +12,18 @@ class TopicReply {
     var sideId = 0
     var userId = 0
 
-    var likeCtn = 0
-    var dislikeCtn = 0
-    var replyCnt = 0
+    //  좋아요 / 싫어요 / 답글 갯수
+    var likeCount = 0
+    var dislikeCount = 0
+    var replyCount = 0
 
     lateinit var writer: User
     
     // 의견이 어떤 진영을 옹호하는지
     lateinit var selectedSide: TopicSide
+
+    var isMyLike = false
+    var isMyDislike = false
 
     // 속성일시를 시간 형태로 저장 변수 => 기본값: 현재일시
     val createdAt = Calendar.getInstance()
@@ -33,12 +37,6 @@ class TopicReply {
             tr.topicId = json.getInt("topic_id")
             tr.sideId = json.getInt("side_id")
             tr.userId = json.getInt("user_id")
-            tr.likeCtn = json.getInt("like_count")
-            tr.dislikeCtn = json.getInt("dislike_count")
-            tr.replyCnt = json.getInt("reply_count")
-
-            // 선택진영 정보 파싱 => selected_side JSON => topicSide 전화
-            tr.selectedSide = TopicSide.getTopicSideFromJson(json.getJSONObject("selected_side"))
 
             val userObject = json.getJSONObject("user")
             tr.writer = User.getUserFromJson(userObject)
@@ -53,6 +51,17 @@ class TopicReply {
             val myPhoneTimeZone = tr.createdAt.timeZone //  어느 지역 시간대인지 따서 저장(서울)
             val timeOffset = myPhoneTimeZone.rawOffset / 1000 / 60 / 60
             tr.createdAt.add(Calendar.HOUR, timeOffset)
+
+            //  좋아요 / 싫어요 / 답글 갯수를 추가 파싱 => 목록 화면에 반영
+            tr.likeCount = json.getInt("like_count")
+            tr.dislikeCount = json.getInt("dislike_count")
+            tr.replyCount = json.getInt("reply_count")
+
+            // 선택진영 정보 파싱 => selected_side JSON => topicSide 전화
+            tr.selectedSide = TopicSide.getTopicSideFromJson(json.getJSONObject("selected_side"))
+
+            tr.isMyLike = json.getBoolean("my_like")
+            tr.isMyDislike = json.getBoolean("my_dislike")
 
             return tr
         }

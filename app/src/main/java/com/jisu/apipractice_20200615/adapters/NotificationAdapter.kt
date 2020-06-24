@@ -28,6 +28,14 @@ class NotificationAdapter(
 //        row가 절대 null 아님을 보장하면서 대입
         val row = tempRow!!
 
+        var notiTitle = row.findViewById<TextView>(R.id.notiTitle)
+        var notiMessage = row.findViewById<TextView>(R.id.notiMessage)
+
+        val data = mList[position]
+
+        notiTitle.text = data.title
+        notiMessage.text = data.message
+
 //        완성된 row를 리스트뷰의 재료로 리턴
         return row
     }

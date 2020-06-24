@@ -11,6 +11,7 @@
         android:padding="10dp">
 
         <TextView
+            android:id="@+id/notiTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
@@ -18,13 +19,13 @@
             android:text="~님이 내 의견에 답글을 남겼습니다." />
 
         <TextView
+            android:id="@+id/notiMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
             android:textColor="@color/gray"
-            android:text="~분 전"/>
-
+            android:text="답글 테스트입니다. 적은 내용 자리"/>
 
     </LinearLayout>
 

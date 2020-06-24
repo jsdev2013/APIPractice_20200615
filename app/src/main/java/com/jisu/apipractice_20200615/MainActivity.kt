@@ -81,7 +81,7 @@ class MainActivity : BaseActivity() {
 //        })
 
         // 화면 제목 변경
-        setTitle("토론 목록")
+        // setTitle("토론 목록") 제목 설정 해제 => 기본 로고 그림이 나오도록
 
         topicAdapter = TopicAdapter(mContext, R.layout.topic_list_item, topicList)
         topicListView.adapter = topicAdapter

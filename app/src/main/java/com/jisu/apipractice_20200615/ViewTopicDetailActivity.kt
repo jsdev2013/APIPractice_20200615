@@ -60,6 +60,10 @@ class ViewTopicDetailActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        // 타이틀 바 제목
+        setTitle("토론 진행 현황")
+
         mTopicId = intent.getIntExtra("topic_id",-1)
 
         if(mTopicId == -1){

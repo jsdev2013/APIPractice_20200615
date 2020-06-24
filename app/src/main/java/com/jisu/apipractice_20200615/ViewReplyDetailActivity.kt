@@ -72,6 +72,10 @@ class ViewReplyDetailActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        // 타이틀 바 제목
+        setTitle("의견 상세 보기")
+        
         mReplyId = intent.getIntExtra("replyId", -1)
 
         mTopicReReplyAdapter = TopicReReplyAdapter(mContext, R.layout.topic_rereply_list_item, mReReplyList)

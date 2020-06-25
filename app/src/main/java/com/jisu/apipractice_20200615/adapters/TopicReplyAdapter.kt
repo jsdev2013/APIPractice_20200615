@@ -14,6 +14,7 @@ import com.jisu.apipractice_20200615.R
 import com.jisu.apipractice_20200615.ViewReplyDetailActivity
 import com.jisu.apipractice_20200615.datas.TopicReply
 import com.jisu.apipractice_20200615.utils.ServerUtil
+import com.jisu.apipractice_20200615.utils.TimeUtil
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 
@@ -53,7 +54,8 @@ class TopicReplyAdapter(
 
         val sdf = SimpleDateFormat("M월 d일 a h시 m분")
 
-        replyTimeTxt.text = sdf.format(data.createdAt.time)
+        //replyTimeTxt.text = sdf.format(data.createdAt.time) //시간 Util을 이용으로 변경
+        replyTimeTxt.text = TimeUtil.getTimeAgoFromCalendar(data.createdAt)
 
         // 좋아요 / 싫어요 / 답글 갯수 표시
         replyBtn.text = "답글 : ${data.replyCount.toString()}개"

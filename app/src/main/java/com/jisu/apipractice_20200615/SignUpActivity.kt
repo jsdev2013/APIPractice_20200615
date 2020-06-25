@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import com.jisu.apipractice_20200615.utils.ServerUtil
 import kotlinx.android.synthetic.main.activity_sign_up.*
@@ -154,6 +156,8 @@ class SignUpActivity : BaseActivity() {
     }
 
     override fun setValues() {
+        userBtn.visibility = View.GONE
+        notiFrameLayout.visibility = View.GONE
 
     }
 }

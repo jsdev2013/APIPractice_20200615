@@ -1,5 +1,7 @@
 package com.jisu.apipractice_20200615
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -9,6 +11,7 @@ import com.jisu.apipractice_20200615.adapters.TopicReplyAdapter
 import com.jisu.apipractice_20200615.datas.Topic
 import com.jisu.apipractice_20200615.datas.TopicReply
 import com.jisu.apipractice_20200615.utils.ServerUtil
+import kotlinx.android.synthetic.main.activity_view_reply_detail.*
 import kotlinx.android.synthetic.main.activity_view_topic_detail.*
 import org.json.JSONObject
 
@@ -33,6 +36,30 @@ class ViewTopicDetailActivity : BaseActivity() {
 
     override fun setupEvents() {
 
+        // 주제에 대한 의견 수정하기
+        replyListView.setOnItemLongClickListener { parent, view, position, id ->
+
+            val alert = AlertDialog.Builder(mContext)
+            alert.setTitle("수정 확인")
+            alert.setMessage("정말 이 댓글을 수정하시겠습니까?")
+            alert.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+
+                // 의견 등록하기 화면으로 이동
+                val myIntent = Intent(mContext, EditReplyActivity::class.java)
+                myIntent.putExtra("topicId",mTopic.id)
+                myIntent.putExtra("topicTitle",mTopic.title)
+                myIntent.putExtra("mySideTitle", mTopic.replyList.get(position).selectedSide.title)
+                myIntent.putExtra("replyId",mTopic.replyList.get(position).id)
+                myIntent.putExtra("replyContent",mTopic.replyList.get(position).content)
+                myIntent.putExtra("isNew",false)
+                startActivity(myIntent)
+            })
+
+            alert.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which -> null })
+            alert.show()
+            return@setOnItemLongClickListener true
+        }
+        
         voteToFirstSideBtn.setOnClickListener {
             voteSideToServer(mTopic.sideList[0].id)
         }

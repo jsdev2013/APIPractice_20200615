@@ -34,7 +34,7 @@ class Notification {
             // 서버의 String으로 된 시간 => Kotlin Date => Noti.createAt 시간으로 반영
             val createAtStr = json.getString("created_at")
             // 파싱용 양식 생성
-            val parsingFormat = SimpleDateFormat("YYYY-MM-DD HH:mm:ss")
+            val parsingFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
             noti.createdAt.time = parsingFormat.parse(createAtStr)
 

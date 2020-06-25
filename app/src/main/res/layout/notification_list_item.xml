@@ -23,9 +23,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:textColor="@color/gray"
+            android:textSize="15sp"
+            android:textColor="#333333"
             android:text="답글 테스트입니다. 적은 내용 자리"/>
+
+        <TextView
+            android:id="@+id/notiCreateAtTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+             android:layout_marginTop="5dp"
+            android:textColor="@color/gray"
+            android:text="~분전" />
 
     </LinearLayout>
 

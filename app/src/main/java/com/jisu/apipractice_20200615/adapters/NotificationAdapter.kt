@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.jisu.apipractice_20200615.R
 import com.jisu.apipractice_20200615.datas.Notification
 import com.jisu.apipractice_20200615.datas.Topic
+import com.jisu.apipractice_20200615.utils.TimeUtil
 
 class NotificationAdapter(
     val mContext:Context,
@@ -30,11 +31,13 @@ class NotificationAdapter(
 
         var notiTitle = row.findViewById<TextView>(R.id.notiTitle)
         var notiMessage = row.findViewById<TextView>(R.id.notiMessage)
+        var notiCreateAtTxt = row.findViewById<TextView>(R.id.notiCreateAtTxt)
 
         val data = mList[position]
 
         notiTitle.text = data.title
         notiMessage.text = data.message
+        notiCreateAtTxt.text = TimeUtil.getTimeAgoFromCalendar(data.createdAt)
 
 //        완성된 row를 리스트뷰의 재료로 리턴
         return row

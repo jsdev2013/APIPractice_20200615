@@ -3,10 +3,14 @@ package com.jisu.apipractice_20200615
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.jisu.apipractice_20200615.utils.ContextUtil
+import com.jisu.apipractice_20200615.utils.ServerUtil
+import org.json.JSONObject
 
 abstract class BaseActivity : AppCompatActivity() {
     val mContext = this
@@ -14,7 +18,13 @@ abstract class BaseActivity : AppCompatActivity() {
     // 제목을 나타내는 텍스트뷰
     lateinit var activityTitleTxt : TextView
     lateinit var logoImg : ImageView
+
+    lateinit var notiFrameLayout: FrameLayout
+
     lateinit var notificationBtn: ImageView
+    lateinit var userBtn: ImageView
+    lateinit var unreadNotiCountTxt : TextView
+
 
     abstract fun setupEvents()
     abstract fun setValues()
@@ -59,13 +69,50 @@ abstract class BaseActivity : AppCompatActivity() {
         
         // XML에 있는 뷰들을 사용할 수 있도록 연결
         activityTitleTxt = supportActionBar!!.customView.findViewById(R.id.activityTitleTxt)
+        notiFrameLayout = supportActionBar!!.customView.findViewById(R.id.notiFrameLayout)
         logoImg = supportActionBar!!.customView.findViewById(R.id.logoImg)
         notificationBtn = supportActionBar!!.customView.findViewById(R.id.notificationBtn)
+        userBtn = supportActionBar!!.customView.findViewById(R.id.userBtn)
+        unreadNotiCountTxt = supportActionBar!!.customView.findViewById(R.id.unreadNotiCountTxt)
         
         // 알림버튼은 눌리면 어느화면에서건 알림화면으로 이동
         notificationBtn.setOnClickListener {
             val myIntent = Intent(mContext, NotificationListActivity::class.java)
             startActivity(myIntent)
+        }
+
+        userBtn.setOnClickListener {
+            val myIntent = Intent(mContext, UserActivity::class.java)
+            startActivity(myIntent)
+        }
+    }
+
+    // 모든 화면에서 알림갯수를 받아와서 표시
+    // 화면에 돌아올 때마다 실행
+    override fun onResume() {
+        super.onResume()
+
+        supportActionBar?.let {
+
+            // 로그인 상태(토큰이 있어야만) 알림 갯수 호출
+            if(ContextUtil.getUserToken(mContext) !=="") {
+                ServerUtil.getRequestNotificationList(mContext, false, object :ServerUtil.JsonResponseHandler{
+                    override fun onResponse(json: JSONObject) {
+
+                        val data = json.getJSONObject("data")
+                        val unreadNotiCount = data.getInt("unread_noty_count")
+
+                        runOnUiThread {
+                            if(unreadNotiCount > 0) {
+                                unreadNotiCountTxt.visibility = View.VISIBLE
+                                unreadNotiCountTxt.text = unreadNotiCount.toString()
+                            } else {
+                                unreadNotiCountTxt.visibility = View.GONE
+                            }
+                        }
+                    }
+                })
+            }
         }
     }
 }

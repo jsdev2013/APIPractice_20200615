@@ -1,6 +1,8 @@
 package com.jisu.apipractice_20200615
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.inputmethod.InputMethod
 import android.view.inputmethod.InputMethodManager
@@ -36,6 +38,39 @@ class ViewReplyDetailActivity : BaseActivity() {
 
     override fun setupEvents() {
 
+        // 의견에 대한 댓글 수정하기
+        reReplyListView.setOnItemLongClickListener { parent, view, position, id ->
+
+            val clickedReplyId = mReReplyList.get(position).id
+            val alert = AlertDialog.Builder(mContext)
+            alert.setTitle("삭제 확인")
+            alert.setMessage("정말 이 댓글을 삭제하시겠습니까?")
+            alert.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+
+                ServerUtil.deleteRequestTopicReply(mContext, clickedReplyId, object : ServerUtil.JsonResponseHandler {
+                    override fun onResponse(json: JSONObject) {
+                        val code = json.getInt("code")
+                        val message = json.getString("message")
+
+                        runOnUiThread {
+                            if (code == 200) {
+                                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+                                // 의견이 달린 답글들을 다시 불어와서 리스트뷰에 뿌려주기
+                                getReplyDetailFromServer()
+                            } else {
+                                Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                })
+
+            })
+
+            alert.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which -> null })
+            alert.show()
+            return@setOnItemLongClickListener true
+        }
+
         postBtn.setOnClickListener {
 
             val inputContent = contentEdt.text.toString()
@@ -62,7 +97,7 @@ class ViewReplyDetailActivity : BaseActivity() {
 
                             //Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(mContext, "이미 의견을 등록한 사람입니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

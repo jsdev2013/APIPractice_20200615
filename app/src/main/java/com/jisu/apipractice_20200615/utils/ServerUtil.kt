@@ -169,6 +169,8 @@ class ServerUtil {
                 .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
                 .build()
 
+            Log.d("요청Token", ContextUtil.getUserToken(context))
+
             client.newCall(request).enqueue(object : Callback {
 
                 override fun onFailure(call: Call, e: IOException) {
@@ -188,6 +190,35 @@ class ServerUtil {
                     handler?.onResponse(json)
                 }
 
+            })
+        }
+
+        //       대댓글 삭제하기를 delete로 하는 함수
+        fun deleteRequestUser(context:Context, text: String, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+
+            val urlBuilder = "${BASE_URL}/user?text=${text}".toHttpUrlOrNull()!!.newBuilder()
+
+            val urlString = urlBuilder.build().toString()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .delete()
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
             })
         }
 
@@ -432,16 +463,18 @@ class ServerUtil {
         }
 
         //        알림목록을  get으로 요청하는 함수
-        fun getRequestNotificationList(context: Context, handler: JsonResponseHandler?){
+        fun getRequestNotificationList(context: Context, needAllNotis:Boolean, handler: JsonResponseHandler?){
             val client = OkHttpClient()
 
             val urlBuilder = "${BASE_URL}/notification".toHttpUrlOrNull()!!.newBuilder()
 
-//            urlBuilder.addEncodedQueryParameter("type", type)
+              urlBuilder.addEncodedQueryParameter("need_all_notis", needAllNotis.toString())
 //            urlBuilder.addEncodedQueryParameter("value", input)
 
 //            완성된 주소를 String으로 변경
             val urlString = urlBuilder.build().toString()
+
+            Log.d("요청Token", ContextUtil.getUserToken(context))
 
 //            실제 요청정보를  request 저장
             val request = Request.Builder()
@@ -469,6 +502,110 @@ class ServerUtil {
                     handler?.onResponse(json)
                 }
 
+            })
+        }
+
+        //       대댓글 삭제하기를 delete로 하는 함수
+        fun deleteRequestTopicReply(context:Context, replyId: Int, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+
+            val urlBuilder = "${BASE_URL}/topic_reply?reply_id=${replyId}".toHttpUrlOrNull()!!.newBuilder()
+
+            val urlString = urlBuilder.build().toString()
+
+            Log.d("요청URL", urlString)
+
+            val request = Request.Builder()
+                .url(urlString)
+                .delete()
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
+            })
+        }
+
+        //        주제에 대한 의견 수정을 put으로 요청하는 함수
+        fun putRequestTopicReply(context:Context, replyId:Int, content:String, handler: JsonResponseHandler?) {
+            //            클라이언트로 동작해주는 변수
+            val client = OkHttpClient()
+
+//            어느 기능 주소로 가는지 Host와 조합해서 명시
+            val urlString = "${BASE_URL}/topic_reply"
+
+//            서버에 전달할 데이터를 담는 과정
+            val formData = FormBody.Builder()
+                .add("reply_id", replyId.toString())
+                .add("content", content)
+                .build()
+
+//            서버에 요청할 모든 정보를 담는 request 변수 생성
+            val request = Request.Builder()
+                .url(urlString)
+                .put(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+//                    연결 자체에 실패한 경우
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+//                    서버 연결 성공 => 어떤 내용이던 응답은 받은 경우
+//                    서버의 응답중 본문을 String으로 저장
+                    val bodyString = response.body!!.string()
+
+//                    본문 String을 => JSON형태로 변환 => 변수에 저장
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+
+//                    JSON 파싱은 화면에서 진행하도록 처리(인터페이스 역할)
+                    handler?.onResponse(json)
+                }
+
+            })
+        }
+
+        //        알림을 어디까지 읽었는지 알려주는 post로 하는 함수
+        fun postRequestNotification(context:Context, notiId:Int, handler: JsonResponseHandler?) {
+
+            val client = OkHttpClient()
+            val urlString = "${BASE_URL}/notification"
+
+            val formData = FormBody.Builder()
+                .add("noti_id", notiId.toString())
+                .build()
+
+            val request = Request.Builder()
+                .url(urlString)
+                .post(formData)
+                .header("X-Http-Token", ContextUtil.getUserToken(context)) //  필요시 첨부
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val bodyString = response.body!!.string()
+                    val json = JSONObject(bodyString)
+                    Log.d("JSON응답", json.toString())
+                    handler?.onResponse(json)
+                }
             })
         }
     }
